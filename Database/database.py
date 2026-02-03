@@ -21,10 +21,18 @@ try:
         depth_rasters TEXT,
         velocity_rasters TEXT,
         digital_elevation_model TEXT,
-        grain_size_raster TEXT
+        grain_size_raster TEXT,
+        unit TEXT,
+        wse_folder TEXT,
+        scour_raster TEXT,
+        fill_raster TEXT
     );
     """
     cursor.execute(create_table_query)
+    # Ensure new optional columns exist on legacy tables
+    cursor.execute("ALTER TABLE condition ADD COLUMN IF NOT EXISTS wse_folder TEXT;")
+    cursor.execute("ALTER TABLE condition ADD COLUMN IF NOT EXISTS scour_raster TEXT;")
+    cursor.execute("ALTER TABLE condition ADD COLUMN IF NOT EXISTS fill_raster TEXT;")
     connection.commit()
     print("Table 'condition' is ready.")
     
