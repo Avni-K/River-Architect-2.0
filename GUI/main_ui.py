@@ -15,20 +15,21 @@ from PyQt5.QtWidgets import (
     QDialog,
     QListWidget,
     QListWidgetItem,
+    QMessageBox,
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 import psycopg2
 from psycopg2 import Error
 
-# Ensure project root is on sys.path so sibling packages (Services, GUI) import cleanly
+# Ensure project root is on sys.path so sibling packages (Module_Services, GUI) import cleanly
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if BASE_DIR not in sys.path:
     sys.path.append(BASE_DIR)
 
 from populate_ui import create_populate_condition_widget
 from condition_ui import create_condition_tab
-from Services import condition_features
+from Module_Services import *
 
 
 
@@ -36,10 +37,10 @@ class RiverArchitectWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.conditions = []
+        self.active_condition = None
         self.db_connection = self.init_db()
         self.init_ui()
     
-
     def init_ui(self):
         self.setWindowTitle("River Architect")
         self.setGeometry(100, 100, 1200, 720)
@@ -81,6 +82,21 @@ class RiverArchitectWindow(QMainWindow):
         self.content_area.setLayout(self.content_layout)
         main_layout.addWidget(self.content_area)
         self.content_area.hide()
+
+        # Always-visible active condition status (placed below tabs/content)
+        self.active_condition_label = QLabel("Active Condition: None")
+        status_font = self.active_condition_label.font()
+        status_font.setBold(True)
+        self.active_condition_label.setFont(status_font)
+        self.active_condition_label.setStyleSheet("color: #000000; padding: 4px 6px;")
+        main_layout.addWidget(self.active_condition_label)
+
+    def set_active_condition(self, name):
+        """Update the status label for the currently selected condition."""
+        self.active_condition = name or None
+        label = getattr(self, "active_condition_label", None)
+        if label:
+            label.setText(f"Active Condition: {name}" if name else "Active Condition: None")
 
     def show_content_page(self, name):
         # Clear content area
@@ -155,24 +171,6 @@ class RiverArchitectWindow(QMainWindow):
 
         listw = QListWidget()
         self.db_list_widget = listw
-        # populate directly from the database to ensure freshness
-        if not self.db_connection:
-            # try to reconnect
-            self.db_connection = self.init_db()
-        if self.db_connection:
-            try:
-                cur = self.db_connection.cursor()
-                cur.execute("SELECT condition_name FROM condition ORDER BY condition_name;")
-                rows = cur.fetchall()
-                cur.close()
-                for r in rows:
-                    if r and r[0]:
-                        listw.addItem(r[0])
-                        # keep internal list in sync
-                        if r[0] not in self.conditions:
-                            self.conditions.append(r[0])
-            except (Exception, Error):
-                pass
         left_layout.addWidget(listw)
 
         btn_layout = QHBoxLayout()
@@ -190,11 +188,100 @@ class RiverArchitectWindow(QMainWindow):
         details.setReadOnly(True)
         right_layout.addWidget(details)
 
+        def delete_condition(name, item):
+            """Delete a condition from the DB and update UI lists."""
+            if not self.db_connection:
+                info = getattr(self, "info_text", None)
+                if info is not None:
+                    try:
+                        info.append("\n⚠ Database connection not available; cannot delete condition.")
+                    except Exception:
+                        pass
+                QMessageBox.warning(self, "Database", "Database connection not available.")
+                return
+            reply = QMessageBox.question(
+                self,
+                "Delete Condition",
+                f"Delete condition '{name}'?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No,
+            )
+            if reply != QMessageBox.Yes:
+                return
+            try:
+                cursor = self.db_connection.cursor()
+                cursor.execute("DELETE FROM condition WHERE condition_name = %s;", (name,))
+                self.db_connection.commit()
+                cursor.close()
+                # refresh cached list and selectors
+                condition_features.load_conditions_from_db(self)
+                listw.takeItem(listw.row(item))
+                details.clear()
+                info = getattr(self, "info_text", None)
+                if info is not None:
+                    try:
+                        info.append(f"\n✓ Deleted condition '{name}'.")
+                    except Exception:
+                        pass
+                # clear active condition label if we just deleted it
+                if getattr(self, "active_condition", None) == name:
+                    try:
+                        self.set_active_condition(None)
+                    except Exception:
+                        pass
+            except (Exception, Error) as e:
+                QMessageBox.critical(self, "Error", f"Could not delete condition:\n{e}")
+                info = getattr(self, "info_text", None)
+                if info is not None:
+                    try:
+                        info.append(f"\nError deleting condition '{name}': {e}")
+                    except Exception:
+                        pass
+
+        def add_condition_item(name):
+            """Add a row with a delete button before the condition name."""
+            item = QListWidgetItem(name)
+            row_widget = QWidget()
+            row_layout = QHBoxLayout()
+            row_layout.setContentsMargins(4, 2, 4, 2)
+            delete_btn = QPushButton("Delete")
+            delete_btn.setFixedWidth(70)
+            delete_btn.clicked.connect(lambda _, n=name, it=item: delete_condition(n, it))
+            name_label = QLabel(name)
+            row_layout.addWidget(delete_btn)
+            row_layout.addWidget(name_label)
+            row_layout.addStretch()
+            row_widget.setLayout(row_layout)
+            item.setSizeHint(row_widget.sizeHint())
+            listw.addItem(item)
+            listw.setItemWidget(item, row_widget)
+
         def refresh_list():
             condition_features.load_conditions_from_db(self)
             listw.clear()
             for n in self.conditions:
-                listw.addItem(n)
+                add_condition_item(n)
+            # keep details pane clean if selection now missing
+            details.clear()
+
+        # populate directly from the database to ensure freshness
+        if not self.db_connection:
+            # try to reconnect
+            self.db_connection = self.init_db()
+        if self.db_connection:
+            try:
+                cur = self.db_connection.cursor()
+                cur.execute("SELECT condition_name FROM condition ORDER BY condition_name;")
+                rows = cur.fetchall()
+                cur.close()
+                for r in rows:
+                    if r and r[0]:
+                        add_condition_item(r[0])
+                        # keep internal list in sync
+                        if r[0] not in self.conditions:
+                            self.conditions.append(r[0])
+            except (Exception, Error):
+                pass
 
         def show_details(item):
             if not item:

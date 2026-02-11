@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
     QFileDialog,
 )
 
-from Services import condition_features
+from Module_Services import condition_features
 
 
 def create_condition_tab(window):

@@ -1,0 +1,3 @@
+# Extra packages for the ra-env environment
+pyqt5
+psycopg2

@@ -1,4 +1,8 @@
 from PyQt5.QtWidgets import QLineEdit, QComboBox
+try:
+    import sip
+except ImportError:  # fallback if sip not available
+    sip = None
 from psycopg2 import Error
 
 
@@ -85,6 +89,10 @@ def create_condition(window):
         except Exception:
             pass
         window.info_text.append(f"\n✓ Condition '{condition_name}' has been created and saved to the database.")
+        try:
+            window.set_active_condition(condition_name)
+        except Exception:
+            pass
     except (Exception, Error) as error:
         window.info_text.append(f"\nError saving condition to database: {error}")
         window.db_connection.rollback()
@@ -155,6 +163,10 @@ def populate_condition_fields(window, condition_name):
             if "Background Raster" in window.inputs:
                 window.inputs["Background Raster"].setText(background_raster or "")
             window.info_text.append(f"\n✓ Loaded condition '{condition_name}' from database.")
+            try:
+                window.set_active_condition(condition_name)
+            except Exception:
+                pass
         else:
             window.info_text.append(f"\n⚠ No database record found for '{condition_name}'.")
     except (Exception, Error) as error:
@@ -180,11 +192,52 @@ def load_conditions_from_db(window):
         cursor.close()
 
         window.conditions = [c[0] for c in conditions]
+
+        selector = getattr(window, "condition_selector", None)
+        if selector is not None:
+            try:
+                if sip and sip.isdeleted(selector):
+                    selector = None
+            except Exception:
+                pass
+        if selector is not None:
+            try:
+                selector.clear()
+                selector.addItems(window.conditions)
+            except Exception:
+                pass
+
+        info = getattr(window, "info_text", None)
+        if info is not None:
+            try:
+                if sip and sip.isdeleted(info):
+                    info = None
+            except Exception:
+                pass
+        if info is not None:
+            try:
+                info.append("\n✓ Successfully loaded conditions from the database.")
+            except Exception:
+                pass
         try:
-            window.condition_selector.clear()
+            if window.active_condition and window.active_condition in window.conditions:
+                window.set_active_condition(window.active_condition)
+            elif window.conditions:
+                window.set_active_condition(window.conditions[0])
+            else:
+                window.set_active_condition(None)
         except Exception:
             pass
-        window.condition_selector.addItems(window.conditions)
-        window.info_text.append("\n✓ Successfully loaded conditions from the database.")
     except (Exception, Error) as error:
-        window.info_text.append(f"\nError loading conditions from database: {error}")
+        info = getattr(window, "info_text", None)
+        if info is not None:
+            try:
+                if sip and sip.isdeleted(info):
+                    info = None
+            except Exception:
+                pass
+        if info is not None:
+            try:
+                info.append(f"\nError loading conditions from database: {error}")
+            except Exception:
+                pass

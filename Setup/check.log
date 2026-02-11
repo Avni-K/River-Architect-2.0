@@ -1,0 +1,8 @@
+===== Tue 02/10/2026 17:53:07.62 =====
+[INFO] Checking environment: ra-env
+[INFO] Resolved prefix   : C:\Program Files\ArcGIS\Pro\bin\Python\envs\ra-env
+[OK] Environment exists, dependencies present, and GUI/main_ui.py found.
+[HINT] To launch GUI with this env:
+1) "C:\Program Files\ArcGIS\Pro\bin\Python\Scripts\proenv.bat"
+2) conda activate "C:\Program Files\ArcGIS\Pro\bin\Python\envs\ra-env"
+3) python "c:\Users\apoor\RA_Avni\GUI\main_ui.py"
