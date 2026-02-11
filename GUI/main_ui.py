@@ -29,7 +29,7 @@ if BASE_DIR not in sys.path:
 
 from populate_ui import create_populate_condition_widget
 from condition_ui import create_condition_tab
-from Module_Services import *
+from Module_Services import condition_features, populate_features
 
 
 
@@ -158,6 +158,30 @@ class RiverArchitectWindow(QMainWindow):
         self.interpolation_method_combo = refs.get("interpolation_method_combo")
         self.populate_info_text = refs.get("info_text")
         self.populate_buttons = refs.get("buttons", {})
+
+        # Wire up action buttons to create output folders
+        btns = self.populate_buttons
+        if btns:
+            shear_btn = btns.get("shear")
+            shield_btn = btns.get("shield")
+            depth_btn = btns.get("depth")
+            morph_btn = btns.get("morph")
+            if shear_btn:
+                shear_btn.clicked.connect(lambda _=False: self.run_bed_shear())
+            if shield_btn:
+                shield_btn.clicked.connect(lambda _=False: self.run_bed_shield())
+            if depth_btn:
+                depth_btn.clicked.connect(
+                    lambda _=False: self.handle_output_folder_creation(
+                        "Depth to Water table rasters", "depth_to_water_table_rasters_folder"
+                    )
+                )
+            if morph_btn:
+                morph_btn.clicked.connect(
+                    lambda _=False: self.handle_output_folder_creation(
+                        "Morphological unit rasters", "morphological_unit_rasters_folder"
+                    )
+                )
 
         self.content_layout.addWidget(container, 1)
 
@@ -298,11 +322,16 @@ class RiverArchitectWindow(QMainWindow):
                         velocity_rasters,
                         digital_elevation_model,
                         grain_size_raster,
+                        condition_output_path,
                         wse_folder,
                         velocity_angle_folder,
                         scour_raster,
                         fill_raster,
-                        background_raster
+                        background_raster,
+                        shear_rasters_folder,
+                        shield_stress_rasters_folder,
+                        depth_to_water_table_rasters_folder,
+                        morphological_unit_rasters_folder
                     FROM condition
                     WHERE condition_name = %s;
                     """,
@@ -317,11 +346,16 @@ class RiverArchitectWindow(QMainWindow):
                         vel,
                         dem,
                         grain,
+                        output_path,
                         wse_folder,
                         velocity_angle_folder,
                         scour_raster,
                         fill_raster,
-                        background_raster
+                        background_raster,
+                        shear_rasters_folder,
+                        shield_stress_rasters_folder,
+                        depth_to_water_table_rasters_folder,
+                        morphological_unit_rasters_folder
                     ) = rec
                     details.setPlainText(
                         f"Name: {name}"
@@ -330,11 +364,16 @@ class RiverArchitectWindow(QMainWindow):
                         f"\n\nVelocity Rasters:\n{vel or ''}"
                         f"\n\nDEM:\n{dem or ''}"
                         f"\n\nGrain Size:\n{grain or ''}"
+                        f"\n\nOutputs Folder:\n{output_path or ''}"
                         f"\n\nWSE Folder (optional):\n{wse_folder or ''}"
                         f"\n\nVelocity Angle Folder (optional):\n{velocity_angle_folder or ''}"
                         f"\n\nScour Raster (optional):\n{scour_raster or ''}"
                         f"\n\nFill Raster (optional):\n{fill_raster or ''}"
                         f"\n\nBackground Raster (optional):\n{background_raster or ''}"
+                        f"\n\nShear Rasters Folder:\n{shear_rasters_folder or ''}"
+                        f"\n\nShield Stress Rasters Folder:\n{shield_stress_rasters_folder or ''}"
+                        f"\n\nDepth to Water Table Rasters Folder:\n{depth_to_water_table_rasters_folder or ''}"
+                        f"\n\nMorphological Unit Rasters Folder:\n{morphological_unit_rasters_folder or ''}"
                     )
                 else:
                     details.setPlainText(f"No record for {name}")
@@ -361,6 +400,94 @@ class RiverArchitectWindow(QMainWindow):
 
         self.content_layout.addWidget(left_frame, 2)
         self.content_layout.addWidget(right_frame, 3)
+
+    def handle_output_folder_creation(self, subfolder_name, column_name):
+        """Create a specific output subfolder under condition_name_outputs and record it in DB."""
+        condition_name = getattr(self, "active_condition", None)
+        info_target = getattr(self, "populate_info_text", None) or getattr(self, "info_text", None)
+
+        if not condition_name:
+            if info_target:
+                try:
+                    info_target.append("\n⚠ Select or create a condition first.")
+                except Exception:
+                    pass
+            return
+
+        if not self.db_connection:
+            if info_target:
+                try:
+                    info_target.append("\n⚠ Database connection not available.")
+                except Exception:
+                    pass
+            return
+
+        try:
+            path = populate_features.create_output_subfolder(
+                self.db_connection,
+                condition_name,
+                subfolder_name,
+                column_name,
+            )
+            if info_target:
+                try:
+                    info_target.append(f"\n✓ Folder ready:\n{path}")
+                except Exception:
+                    pass
+        except Exception as exc:
+            if info_target:
+                try:
+                    info_target.append(f"\n⚠ Could not prepare folder: {exc}")
+                except Exception:
+                    pass
+
+    def run_bed_shear(self):
+        """Run bed shear stress calculation and save rasters to the shear folder."""
+        condition_name = getattr(self, "active_condition", None)
+        info_target = getattr(self, "populate_info_text", None) or getattr(self, "info_text", None)
+
+        if not condition_name:
+            if info_target:
+                info_target.append("\n⚠ Select or create a condition first.")
+            return
+        if not self.db_connection:
+            if info_target:
+                info_target.append("\n⚠ Database connection not available.")
+            return
+        try:
+            outputs = populate_features.calculate_bed_shear_stress(condition_name, self.db_connection)
+            if info_target:
+                info_target.append(f"\n✓ Created {len(outputs)} bed shear raster(s).\n" + "\n".join(outputs))
+        except populate_features.InputError as exc:
+            if info_target:
+                info_target.append(f"\n⚠ Input problem: {exc}")
+        except Exception as exc:
+            if info_target:
+                info_target.append(f"\n⚠ Error creating bed shear rasters: {exc}")
+
+    def run_bed_shield(self):
+        """Run bed Shields stress calculation and save rasters to the shield folder."""
+        condition_name = getattr(self, "active_condition", None)
+        info_target = getattr(self, "populate_info_text", None) or getattr(self, "info_text", None)
+
+        if not condition_name:
+            if info_target:
+                info_target.append("\n⚠ Select or create a condition first.")
+            return
+        if not self.db_connection:
+            if info_target:
+                info_target.append("\n⚠ Database connection not available.")
+            return
+        try:
+            outputs = populate_features.calculate_bed_shield_stress(condition_name, self.db_connection)
+            if info_target:
+                info_target.append(f"\n✓ Created {len(outputs)} bed Shields raster(s).\n" + "\n".join(outputs))
+        except populate_features.InputError as exc:
+            if info_target:
+                info_target.append(f"\n⚠ Input problem: {exc}")
+        except Exception as exc:
+            if info_target:
+                info_target.append(f"\n⚠ Error creating bed Shields rasters: {exc}")
      
     def init_db(self):
         try:
@@ -375,6 +502,11 @@ class RiverArchitectWindow(QMainWindow):
                 cursor.execute("ALTER TABLE IF EXISTS condition ADD COLUMN IF NOT EXISTS unit TEXT;")
                 cursor.execute("ALTER TABLE IF EXISTS condition ADD COLUMN IF NOT EXISTS velocity_angle_folder TEXT;")
                 cursor.execute("ALTER TABLE IF EXISTS condition ADD COLUMN IF NOT EXISTS background_raster TEXT;")
+                cursor.execute("ALTER TABLE IF EXISTS condition ADD COLUMN IF NOT EXISTS condition_output_path TEXT;")
+                cursor.execute("ALTER TABLE IF EXISTS condition ADD COLUMN IF NOT EXISTS shear_rasters_folder TEXT;")
+                cursor.execute("ALTER TABLE IF EXISTS condition ADD COLUMN IF NOT EXISTS shield_stress_rasters_folder TEXT;")
+                cursor.execute("ALTER TABLE IF EXISTS condition ADD COLUMN IF NOT EXISTS depth_to_water_table_rasters_folder TEXT;")
+                cursor.execute("ALTER TABLE IF EXISTS condition ADD COLUMN IF NOT EXISTS morphological_unit_rasters_folder TEXT;")
                 connection.commit()
                 cursor.close()
             except Exception:

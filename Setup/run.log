@@ -44,3 +44,314 @@ WARNING:  database "river_architect" has a collation version mismatch
 DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
 HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
 PostgreSQL connection closed.
+===== Wed 02/11/2026  1:45:09.56 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] init condition_output table
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition_output' is ready and linked to condition.condition_name.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+PostgreSQL connection closed.
+===== Wed 02/11/2026  2:05:40.01 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] init condition_output table
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition_output' is ready and linked to condition.condition_name.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+Traceback (most recent call last):
+  File "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py", line 31, in <module>
+    from condition_ui import create_condition_tab
+  File "c:\Users\apoor\RA_Avni\GUI\condition_ui.py", line 14, in <module>
+    from Module_Services import condition_features
+  File "c:\Users\apoor\RA_Avni\Module_Services\__init__.py", line 1, in <module>
+    from . import condition_features, populate_features
+  File "c:\Users\apoor\RA_Avni\Module_Services\populate_features.py", line 9, in <module>
+    import config
+ModuleNotFoundError: No module named 'config'
+===== Wed 02/11/2026  2:06:24.75 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] init condition_output table
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition_output' is ready and linked to condition.condition_name.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+Traceback (most recent call last):
+  File "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py", line 31, in <module>
+    from condition_ui import create_condition_tab
+  File "c:\Users\apoor\RA_Avni\GUI\condition_ui.py", line 14, in <module>
+    from Module_Services import condition_features
+  File "c:\Users\apoor\RA_Avni\Module_Services\__init__.py", line 1, in <module>
+    from . import condition_features, populate_features
+  File "c:\Users\apoor\RA_Avni\Module_Services\populate_features.py", line 9, in <module>
+    import config
+ModuleNotFoundError: No module named 'config'
+===== Wed 02/11/2026  2:07:16.28 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+Traceback (most recent call last):
+  File "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py", line 31, in <module>
+    from condition_ui import create_condition_tab
+  File "c:\Users\apoor\RA_Avni\GUI\condition_ui.py", line 14, in <module>
+    from Module_Services import condition_features
+  File "c:\Users\apoor\RA_Avni\Module_Services\__init__.py", line 1, in <module>
+    from . import condition_features, populate_features
+  File "c:\Users\apoor\RA_Avni\Module_Services\populate_features.py", line 9, in <module>
+    import config
+ModuleNotFoundError: No module named 'config'
+===== Wed 02/11/2026  2:09:26.39 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+
+(arcgispro-py3) C:\Program Files\ArcGIS\Pro\bin\Python\envs\arcgispro-py3>[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "C:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+Traceback (most recent call last):
+  File "C:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py", line 31, in <module>
+    from condition_ui import create_condition_tab
+  File "C:\Users\apoor\RA_Avni\GUI\condition_ui.py", line 14, in <module>
+    from Module_Services import condition_features
+  File "C:\Users\apoor\RA_Avni\Module_Services\__init__.py", line 1, in <module>
+    from . import condition_features, populate_features
+  File "C:\Users\apoor\RA_Avni\Module_Services\populate_features.py", line 9, in <module>
+    import config
+ModuleNotFoundError: No module named 'config'
+===== Wed 02/11/2026  2:11:56.65 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+Traceback (most recent call last):
+  File "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py", line 31, in <module>
+    from condition_ui import create_condition_tab
+  File "c:\Users\apoor\RA_Avni\GUI\condition_ui.py", line 14, in <module>
+    from Module_Services import condition_features
+  File "c:\Users\apoor\RA_Avni\Module_Services\__init__.py", line 1, in <module>
+    from . import condition_features, populate_features
+  File "c:\Users\apoor\RA_Avni\Module_Services\populate_features.py", line 9, in <module>
+    import config
+ModuleNotFoundError: No module named 'config'
+===== Wed 02/11/2026  2:14:06.85 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+
+(arcgispro-py3) C:\Program Files\ArcGIS\Pro\bin\Python\envs\arcgispro-py3>[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "C:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+===== Wed 02/11/2026  2:28:39.70 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+PostgreSQL connection closed.
+===== Wed 02/11/2026  2:38:34.45 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+PostgreSQL connection closed.
+===== Wed 02/11/2026  2:39:43.19 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+PostgreSQL connection closed.
+===== Wed 02/11/2026  2:48:21.88 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+PostgreSQL connection closed.
+===== Wed 02/11/2026  2:54:01.03 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+PostgreSQL connection closed.
+===== Wed 02/11/2026  3:00:04.58 =====
+[INFO] Starting launcher for ra-env
+[STEP] proenv.bat
+[STEP] conda activate "C:\Progra~1\ArcGIS\Pro\bin\Python\envs\ra-env"
+
+CondaError: Run 'conda init' before 'conda activate'
+
+[WARN] conda activate failed; trying activate.bat directly.
+[STEP] init river_architect database
+WARNING:  database "postgres" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE postgres REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+Table 'condition' is ready.
+[STEP] python "c:\Users\apoor\RA_Avni\Setup\..\GUI\main_ui.py"
+WARNING:  database "river_architect" has a collation version mismatch
+DETAIL:  The database was created using collation version 1540.3,1540.3, but the operating system provides version 1541.2,1541.2.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE river_architect REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+PostgreSQL connection closed.

@@ -31,6 +31,10 @@ if not "%CONDA_PREFIX%"=="%ENV_PREFIX%" (
     set "CONDA_DEFAULT_ENV=%ENV_NAME%"
 )
 
+rem Step 2.5: ensure river_architect database and tables exist
+call :log [STEP] init river_architect database
+"%PYTHON_EXE%" "%~dp0..\Database\input_condition_database.py" >>"%LOGFILE%" 2>&1
+
 rem Step 3: launch the app
 if not exist "%SCRIPT_TO_RUN%" (
     call :log [ERROR] Script not found at: "%SCRIPT_TO_RUN%"

@@ -74,6 +74,7 @@ def create_condition_tab(window):
         "Velocity Rasters",
         "Digital Elevatation Model",
         "Grain size rasters",
+        "Select Output Location",
     ]
     for field_name in input_fields:
         field_layout = QHBoxLayout()
@@ -81,9 +82,17 @@ def create_condition_tab(window):
         label.setMinimumWidth(180)
         field_layout.addWidget(label)
         input_field = QLineEdit()
-        input_field.setPlaceholderText(f"Enter {field_name.lower()}")
+        placeholder = f"Enter {field_name.lower()}"
+        if field_name == "Select Output Location":
+            placeholder = "Choose a folder for condition outputs"
+        input_field.setPlaceholderText(placeholder)
         field_layout.addWidget(input_field)
-        if "raster" in field_name.lower() or "model" in field_name.lower():
+        if field_name == "Select Output Location":
+            browse_btn = QPushButton("Browse")
+            browse_btn.setMaximumWidth(80)
+            browse_btn.clicked.connect(lambda checked, f=input_field: browse_file(window, f, select_folder=True))
+            field_layout.addWidget(browse_btn)
+        elif "raster" in field_name.lower() or "model" in field_name.lower():
             browse_btn = QPushButton("Browse")
             browse_btn.setMaximumWidth(80)
             browse_btn.clicked.connect(lambda checked, f=input_field: browse_file(window, f))

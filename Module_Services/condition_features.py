@@ -1,3 +1,5 @@
+import os
+
 from PyQt5.QtWidgets import QLineEdit, QComboBox
 try:
     import sip
@@ -13,6 +15,37 @@ def proceed_to_analysis(window):
     if not condition_name:
         window.info_text.append("\n⚠ Please enter a Condition Name before proceeding.")
         return
+
+    base_output = window.inputs.get("Select Output Location", QLineEdit()).text().strip()
+    if not base_output:
+        window.info_text.append("\n⚠ Please select an output location before proceeding.")
+        return
+
+    output_path = os.path.join(base_output, f"{condition_name}_outputs")
+
+    try:
+        os.makedirs(output_path, exist_ok=True)
+    except Exception as exc:  # keep UI responsive on failure
+        window.info_text.append(f"\n⚠ Could not create output folder:\n{exc}")
+        return
+
+    if window.db_connection:
+        try:
+            cursor = window.db_connection.cursor()
+            cursor.execute("ALTER TABLE IF EXISTS condition ADD COLUMN IF NOT EXISTS condition_output_path TEXT;")
+            cursor.execute(
+                "UPDATE condition SET condition_output_path = %s WHERE condition_name = %s;",
+                (output_path, condition_name),
+            )
+            window.db_connection.commit()
+            cursor.close()
+            window.info_text.append(f"\n✓ Output folder set to:\n{output_path}")
+        except (Exception, Error) as error:
+            window.info_text.append(f"\n⚠ Could not save output folder to database: {error}")
+            try:
+                window.db_connection.rollback()
+            except Exception:
+                pass
 
     window.info_text.append(f"\n✓ Condition '{condition_name}' ready for analysis.")
     window.info_text.append("Loading analysis modules...")
@@ -38,6 +71,8 @@ def create_condition(window):
     scour_raster = window.inputs.get("Scour Raster", QLineEdit()).text()
     fill_raster = window.inputs.get("Fill Raster", QLineEdit()).text()
     background_raster = window.inputs.get("Background Raster", QLineEdit()).text()
+    base_output = window.inputs.get("Select Output Location", QLineEdit()).text().strip()
+    condition_output_path = os.path.join(base_output, f"{condition_name}_outputs") if base_output else None
     unit = None
     if "Unit" in window.inputs and isinstance(window.inputs["Unit"], QComboBox):
         unit = window.inputs["Unit"].currentText()
@@ -61,8 +96,9 @@ def create_condition(window):
                 velocity_angle_folder,
                 scour_raster,
                 fill_raster,
-                background_raster
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                background_raster,
+                condition_output_path
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
             """,
             (
                 condition_name,
@@ -75,7 +111,8 @@ def create_condition(window):
                 velocity_angle_folder,
                 scour_raster,
                 fill_raster,
-                background_raster
+                background_raster,
+                condition_output_path
             )
         )
         window.db_connection.commit()
@@ -119,7 +156,8 @@ def populate_condition_fields(window, condition_name):
                 velocity_angle_folder,
                 scour_raster,
                 fill_raster,
-                background_raster
+                background_raster,
+                condition_output_path
             FROM condition
             WHERE condition_name = %s;
             """,
@@ -139,6 +177,7 @@ def populate_condition_fields(window, condition_name):
                 scour_raster,
                 fill_raster,
                 background_raster,
+                condition_output_path,
             ) = record
             # Ensure keys exist in inputs
             window.inputs.setdefault("Condition Name", QLineEdit()).setText(condition_name)
@@ -162,6 +201,17 @@ def populate_condition_fields(window, condition_name):
                 window.inputs["Fill Raster"].setText(fill_raster or "")
             if "Background Raster" in window.inputs:
                 window.inputs["Background Raster"].setText(background_raster or "")
+            if "Select Output Location" in window.inputs:
+                # Store the parent folder so user sees the location they picked
+                base_output = ""
+                if condition_output_path:
+                    # If we stored the path with the suffix, show the parent directory
+                    expected_suffix = f"{condition_name}_outputs"
+                    if condition_output_path.endswith(expected_suffix):
+                        base_output = os.path.dirname(condition_output_path)
+                    else:
+                        base_output = condition_output_path
+                window.inputs["Select Output Location"].setText(base_output)
             window.info_text.append(f"\n✓ Loaded condition '{condition_name}' from database.")
             try:
                 window.set_active_condition(condition_name)
